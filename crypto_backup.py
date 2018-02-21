@@ -1,19 +1,18 @@
 import requests
+import sys
+from time import sleep
+import subprocess
 from termcolor import colored
 from terminaltables import AsciiTable
 
-response = requests.get('https://api.coinmarketcap.com/v1/ticker/')
-json_data = response.json()
-coins = [item for item in json_data]
-
-table_data = []
-table = AsciiTable(table_data)
-
 def crypto(i=None):
 	while True:
-		c = len(coins)
-		c += 1
-		num = 1
+		response = requests.get('https://api.coinmarketcap.com/v1/ticker/')
+		json_data = response.json()
+		coins = [item for item in json_data]
+
+		table_data = []
+		table = AsciiTable(table_data)		
 
 		if i is None:
 			for index, x in enumerate(coins):		
@@ -51,8 +50,10 @@ def crypto(i=None):
 					table_data[index].append(percent_change_24h)
 
 		table_data.insert(0, ['Rank', 'Name', 'Price', '24h % Change'])
+		sys.stdout.flush()
 		print(table.table)
-		time.sleep(1)
-	
+		sleep(60)
+		subprocess.call("clear")
+		sys.stdout.flush()
 
 crypto()
